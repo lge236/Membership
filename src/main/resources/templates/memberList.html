@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang = "en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title> 회원 목록 페이지 (관리자용)</title>
+</head>
+<body>
+
+<h2 style="text-align: center;">회원목록</h2>
+<table border="1" >
+    <tr>
+        <td>Code</td>
+        <td>Id</td>
+        <td>password</td>
+<!--        <td>이름</td>-->
+        <td>email</td>
+        <td>회원가입일자</td>
+<!--        <td>최근 회원 정보 수정일</td>-->
+    </tr>
+    <c:forEach items="${memberList}" var="mb">
+        <tr>
+            <td><c:out value="${mb.userCode}"></c:out></td>
+            <td><c:out value="${mb.userid}"></c:out></td>
+            <td><c:out value="${mb.userpw}"></c:out></td>
+<!--            <td><c:out value="${mb.username}"></c:out></td>-->
+            <td><c:out value="${mb.useremail}"></c:out></td>
+            <td><c:out value="${mb.regdate}"></c:out></td>
+<!--            <td><c:out value="${mb.updatedate}"></c:out></td>-->
+        </tr>
+    </c:forEach>
+</table>
+<input type="button" value="메인으로" class="btn" onclick="location.href='/admin'">
+
+</body>
+</html>
