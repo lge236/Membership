@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import testProject.membership.member.service.UserService;
+import testProject.membership.member.service.MemberService;
 
 
 @RequiredArgsConstructor
@@ -16,7 +16,7 @@ import testProject.membership.member.service.UserService;
 @Configuration
 //WebSecurityConfigurerAdapter는 Spring Security의 설정파일로서의 역할
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserService userService; // 유저 정보를 가져올 클래스
+    private final MemberService memberService; // 유저 정보를 가져올 클래스
 
     @Override
     public void configure(WebSecurity web) {
@@ -53,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     //로그인 할떄 필요한 정보를 가져오는 곳
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(new BCryptPasswordEncoder());
+        auth.userDetailsService(memberService).passwordEncoder(new BCryptPasswordEncoder());
         // 해당 서비스(userService)에서는 UserDetailsService를 implements해서
         // loadUserByUsername() 구현해야함 (서비스 참고)
 

@@ -24,7 +24,7 @@ Spring Data JPA
 @Entity
 //@javax.persistence.Table(name="user_info")
 @Getter
-public class UserInfo implements UserDetails {
+public class MemberInfo implements UserDetails {
 
     @Id // 직접할당
     @javax.persistence.Id //Prime Key
@@ -42,7 +42,7 @@ public class UserInfo implements UserDetails {
     private String auth;
 
     @Builder
-    public UserInfo(String id, String password, String auth) {
+    public MemberInfo(String id, String password, String auth) {
         this.id = id;
         this.password = password;
         this.auth = auth;
