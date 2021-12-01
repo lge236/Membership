@@ -98,6 +98,4 @@ public class MemberInfo implements UserDetails {
         // 계정이 사용 가능한지 확인하는 로직
         return true; // true -> 사용 가능
     }
-
-
 }

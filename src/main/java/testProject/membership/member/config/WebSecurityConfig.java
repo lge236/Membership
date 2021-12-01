@@ -1,8 +1,12 @@
 package testProject.membership.member.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,9 +18,17 @@ import testProject.membership.member.service.MemberService;
 @RequiredArgsConstructor
 @EnableWebSecurity // Spring Security를 활성화
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true) //특정 주소 접근시 권한 및 인증을 미리 체크하겠다.
 //WebSecurityConfigurerAdapter는 Spring Security의 설정파일로서의 역할
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final MemberService memberService; // 유저 정보를 가져올 클래스
+
+
+    /*@Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }*/
 
     @Override
     public void configure(WebSecurity web) {
@@ -25,6 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/css/**", "/js/**", "/img/**");
     }
 
+    //필터링
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 // WebSecurityConfigurerAdapter를 상속받으면 오버라이드 가능
@@ -51,6 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         ;
     }
     //로그인 할떄 필요한 정보를 가져오는 곳
+    //++시큐리티가 로그인할 때 어떤 암호화로 인코딩해서 비번을 비교할지 알려줘야 함
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(memberService).passwordEncoder(new BCryptPasswordEncoder());
