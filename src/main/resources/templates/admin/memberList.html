@@ -13,7 +13,7 @@
     <tr>
         <td>회원번호</td>
         <td>ID</td>
-<!--        <td>이름</td>-->
+        <td>이름</td>
 <!--        <td>email</td>-->
 <!--        <td>회원가입일자</td>-->
 <!--        <td>최근 회원 정보 수정일</td>-->
@@ -23,7 +23,7 @@
         <tr th:each="member : ${members}">
             <td th:text="${member.code}"></td>
             <td th:text="${member.id}">id</td>
-<!--            <td><c:out value="${mb.username}"></c:out></td>-->
+            <td th:text="${member.name}">name</td>
 <!--            <td><c:out value="${mb.useremail}"></c:out></td>-->
 <!--            <td><c:out value="${mb.regdate}"></c:out></td>-->
 <!--            <td><c:out value="${mb.updatedate}"></c:out></td>-->

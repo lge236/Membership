@@ -63,6 +63,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true) // 세샨 정보 삭제 여부
         ;
     }
+
+ /*   //아래는 있어야 하는지 몰라 일단 삭제함
     //로그인 할떄 필요한 정보를 가져오는 곳
     //++시큐리티가 로그인할 때 어떤 암호화로 인코딩해서 비번을 비교할지 알려줘야 함
     @Override
@@ -71,5 +73,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 해당 서비스(userService)에서는 UserDetailsService를 implements해서
         // loadUserByUsername() 구현해야함 (서비스 참고)
 
-    }
+    }*/
 }

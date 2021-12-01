@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.w3.org/1999/xhtml">
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:th="https://www.thymeleaf.org/">
 <head>
   <meta charset="UTF-8">
   <title>login</title>
@@ -16,7 +17,7 @@
   <button type="submit">Login</button>
 </form> <br>
 
-<!--자격 증명에 실패했다는 메시지-->
+<!--자격 증명에 실패했다는 메시지 -->
 <div th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']} != null">
   <span th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"></span>
 </div>

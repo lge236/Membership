@@ -1,15 +1,19 @@
 package testProject.membership.member.service;
 
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Service;
 import testProject.membership.member.domain.MemberInfo;
 import testProject.membership.member.dto.MemberInfoDTO;
 import testProject.membership.member.repository.MemberRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,16 +37,17 @@ public class MemberService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException((id)));
     }
 
-    public void save(MemberInfoDTO infoDto) { //long -> void - long 이어야 하는 이유??
+    public long save(MemberInfoDTO infoDto) { //long 이어야 하는 이유??
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         infoDto.setPassword(encoder.encode(infoDto.getPassword()));
 
-        memberRepository.save(MemberInfo.builder()
+        return memberRepository.save(MemberInfo.builder()
                 .id(infoDto.getId())
                 .auth(infoDto.getAuth())
-                .password(infoDto.getPassword()).build());
+                .password(infoDto.getPassword())
+                .name(infoDto.getName()).build()).getCode();
     }
-    //일반 회원조회 (회원 정보 수정)
+    //일반 회원조회 (회원 정보 수정) -> loadUserByUsername 사용하기
     public Optional<MemberInfo> findOne(String memberId){ //Long or String??
         return memberRepository.findById(memberId);
     }
@@ -52,7 +57,20 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findAll();
     }
 
-    public int updateById(String id, String password){
-        return memberRepository.updateById(id, password);
+    public int updateById(String id, String name, String password){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); // 비밀번호 매치 로직 (였던것)
+
+        if(encoder.matches(password, loadUserByUsername(id).getPassword())){
+            return memberRepository.updateById(id, name);
+        } else {throw new IllegalStateException("비밀번호가 일치하지 않습니다.");}
+    }
+
+    public int updatePassword(String id, String password, String newPassword){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); // 비밀번호 매치 로직 (였던것)
+
+        if(encoder.matches(password, loadUserByUsername(id).getPassword())){
+            newPassword = encoder.encode(newPassword); //새로운 비밀번호 암호화
+            return memberRepository.updatePassword(id, newPassword);
+        } else {throw new IllegalStateException("비밀번호가 일치하지 않습니다.");}
     }
 }

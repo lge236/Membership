@@ -16,9 +16,18 @@ public interface MemberRepository extends JpaRepository<MemberInfo, Long> {
     Optional<MemberInfo> findById(String id);
     List<MemberInfo> findAll();
 
-    @Transactional
-    @Modifying(clearAutomatically = true)
-    @Query("UPDATE MemberInfo member_info SET member_info.password = ?2 WHERE member_info.id = ?1") //id가 ?1인 레코드(?)를 찾아서 password 에 ?2를 대입
-    int updateById(String id, String password);
+    //회원 정보 수정(비밀번호 제외)
+    @Transactional //영속성 문제 해결
+    @Modifying(clearAutomatically = true)//DB와 스프링간의 데이터 싱크를 위해(값 불일치 방지)
+    @Query("UPDATE MemberInfo member_info SET member_info.name = ?2 WHERE member_info.id = ?1") //id가 ?1인 레코드(?)를 찾아서 password 에 ?2를 대입
+//  다음과 같이 응용  @Query("UPDATE MemberInfo member_info SET member_info.name = ?2, member_info.email = ?3, member_info.address = ?4 WHERE member_info.id = ?1")
+    int updateById(String id, String name);
+
+    //비밀 번호 수정
+    @Transactional //영속성 문제 해결
+    @Modifying(clearAutomatically = true)//DB와 스프링간의 데이터 싱크를 위해(값 불일치 방지)
+    @Query("UPDATE MemberInfo member_info SET member_info.password = ?2 WHERE member_info.id = ?1")
+   int updatePassword(String id, String password);
+
 }
 

@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html lang = "en"
-      xmlns="http://www.w3.org/1999/xhtml"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
-      xmlns:th="http://www.w3.org/1999/xhtml">
+      xmlns:th="https://www.thymeleaf.org/">
 <head>
     <meta charset="UTF-8">
     <title>main</title>
 </head>
 <body>
 <h2>회원 전용 페이지</h2>
+<div sec:authorize-expr ="isAuthenticated()">
+    반갑습니다. <span th:text ="${member.name}">Name</span>님!
+</div>
+
+<div sec:authorize-expr= "hasRole('ROLE_ADMIN')">
+    <span th:text ="${member.name}">Name</span>님 당신은 관리자입니다.<br>
+</div>
+
 ID : <span sec:authentication="name"></span> <br>
-소유 권한 : <span sec:authentication="authorities"></span> </br>
+소유 권한 : <span sec:authentication="authorities"></span> <br>
 
 <a href="/admin"> 관리자 페이지로 이동 </a>
 

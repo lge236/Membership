@@ -1,4 +1,5 @@
 package testProject.membership.member.controller;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,11 +24,23 @@ import java.util.Optional;
 @Controller
 public class MemberController {
 
+    @Autowired
     private final MemberService memberService;
+
+    //return "/경로"; = html 문서 경로
+    //ruturn "redirect: /값"; = 맵핑 경로
+
     /*
     /user로 Post 요청이 들어오면
     UserServicedml의 save()를 호출한 뒤에 /login으로 이동
     */
+    @GetMapping("/")
+    public String main_info(Model model){
+        MemberInfo member = (MemberInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        member = memberService.loadUserByUsername(member.getId());
+        model.addAttribute("member", member);
+        return "main";
+    }
     @PostMapping("/user")
     public String signup(MemberInfoDTO infoDto) { // 회원 추가
         memberService.save(infoDto);
@@ -35,21 +48,36 @@ public class MemberController {
     }
 
     @PostMapping("/memberInfoMod")
-    public String update(String password) { // 정보 수정, 다른 것들도 할 경우 어떻게 할 것인가
+    public String updateById(String password, String name) { // 정보 수정, 비밀번호 변경 할 경우 어떻게 할 것인가
 
         MemberInfo member = (MemberInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println(member.getId()+password);
-        System.out.println(memberService.updateById(member.getId(), password));
+        System.out.println(member.getId()+" "+password+" "+name);
+        memberService.updateById(member.getId(), name, password);
+
         // 여기서는 트랜잭션이 종료되기 때문에 DB값은 변경이 됐음
-        // 하지만 세션값은 변경되지 않은 상태이기때문에 세션값 갱신이 필요함
+        // 하지만 세션값은 변경되지 않은 상태이기때문에 세션값 갱신이 필요함 >> 나중에 알아보도록 하자
 
         //세션 등록
 //        Authentication authentication = AuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(id, password));
 //        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "redirect:/logout"; //비밀번호 변경시 재로그인 하도록 하려면? 비밀번호 변경 따로 구현하기
+        return "redirect:/"; //비밀번호 변경시 재로그인 하도록 하려면 login으로 redirect? 비밀번호 변경 따로 구현하기
     }
 
+    @PostMapping("/updatePW")
+    public String requestUpdatePassword(String password, String newPassword) { // 정보 수정, 비밀번호 변경 할 경우 어떻게 할 것인가
 
+        MemberInfo member = (MemberInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(member.getId()+" "+password+" "+newPassword);
+        memberService.updatePassword(member.getId(), password, newPassword);
+
+        // 여기서는 트랜잭션이 종료되기 때문에 DB값은 변경이 됐음
+        // 하지만 세션값은 변경되지 않은 상태이기때문에 세션값 갱신이 필요함 >> 나중에 알아보도록 하자
+
+        //세션 등록
+//        Authentication authentication = AuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(id, password));
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return "redirect:/logout"; //비밀번호 변경시 재로그인 하도록 하려면 login으로 redirect? 비밀번호 변경 따로 구현하기
+    }
     // 로그아웃 처리 SecurityContextLogoutHandler() 사용
     @GetMapping(value = "/logout")
     public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
@@ -58,7 +86,7 @@ public class MemberController {
     }
 
     @GetMapping("/admin/members")
-    public String list(Model model){
+    public String memberList(Model model){
         List<MemberInfo> members = memberService.findMembers();
         model.addAttribute("members", members);
         return "admin/memberList";

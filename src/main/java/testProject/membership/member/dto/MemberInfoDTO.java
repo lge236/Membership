@@ -10,4 +10,5 @@ public class MemberInfoDTO {
     private String id;
     private String password;
     private String auth;
+    private String name;
 }
