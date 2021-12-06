@@ -62,7 +62,7 @@ public class MemberService implements UserDetailsService {
 
         if(encoder.matches(password, loadUserByUsername(id).getPassword())){
             return memberRepository.updateById(id, name);
-        } else {throw new IllegalStateException("비밀번호가 일치하지 않습니다.");}
+        } else {throw new IllegalStateException("비밀번호가 일치하지 않습니다.");}//https://kimcoder.tistory.com/249
     }
 
     public int updatePassword(String id, String password, String newPassword){
@@ -71,6 +71,6 @@ public class MemberService implements UserDetailsService {
         if(encoder.matches(password, loadUserByUsername(id).getPassword())){
             newPassword = encoder.encode(newPassword); //새로운 비밀번호 암호화
             return memberRepository.updatePassword(id, newPassword);
-        } else {throw new IllegalStateException("비밀번호가 일치하지 않습니다.");}
+        } else {throw new IllegalStateException("비밀번호가 일치하지 않습니다.");}//https://kimcoder.tistory.com/249
     }
 }

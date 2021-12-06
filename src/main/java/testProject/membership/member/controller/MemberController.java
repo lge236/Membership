@@ -28,7 +28,7 @@ public class MemberController {
     private final MemberService memberService;
 
     //return "/경로"; = html 문서 경로
-    //ruturn "redirect: /값"; = 맵핑 경로
+    //ruturn "redirect: /값"; = 맵핑 액션 이름
 
     /*
     /user로 Post 요청이 들어오면

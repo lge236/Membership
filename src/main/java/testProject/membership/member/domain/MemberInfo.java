@@ -9,13 +9,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.*;
+import java.util.*;
+
 /*
 Spring Data JPA
 식별자를 직접 할당하여 관리
@@ -43,6 +39,9 @@ public class MemberInfo implements UserDetails {
 
     @Column(name = "name")
     private String name;
+
+    @OneToMany(mappedBy = "memberInfo")
+    private List<MemberInfo> members = new ArrayList<>();
 
     @Builder
     public MemberInfo(String id, String password, String auth, String name) {
