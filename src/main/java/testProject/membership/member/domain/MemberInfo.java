@@ -5,9 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.*;
@@ -22,12 +25,13 @@ Spring Data JPA
 @Getter
 public class MemberInfo implements UserDetails {
 
-    @Id // 직접할당
-    @javax.persistence.Id //Prime Key
+
     @Column(name = "code") //Entity Key?
     @GeneratedValue(strategy= GenerationType.IDENTITY)// DB에 위임을 통해 기본 키 생성
     private Long code;
 
+    @Id // 직접할당
+    @javax.persistence.Id //Prime Key
     @Column(name = "id", unique = true)
     private String id;
 
@@ -39,9 +43,6 @@ public class MemberInfo implements UserDetails {
 
     @Column(name = "name")
     private String name;
-
-    @OneToMany(mappedBy = "memberInfo")
-    private List<MemberInfo> members = new ArrayList<>();
 
     @Builder
     public MemberInfo(String id, String password, String auth, String name) {
@@ -100,5 +101,15 @@ public class MemberInfo implements UserDetails {
     public boolean isEnabled() {
         // 계정이 사용 가능한지 확인하는 로직
         return true; // true -> 사용 가능
+    }
+
+
+    public void updateById(String name){
+        this.name = name;
+    }
+
+    //비밀 번호 수정
+    public void updatePassword(String password){
+        this.password = password;
     }
 }

@@ -1,4 +1,5 @@
 package testProject.membership.member.controller;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,7 +53,7 @@ public class MemberController {
 
         MemberInfo member = (MemberInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         System.out.println(member.getId()+" "+password+" "+name);
-        memberService.updateById(member.getId(), name, password);
+        memberService.updateMemberById(member.getId(), name, password);
 
         // 여기서는 트랜잭션이 종료되기 때문에 DB값은 변경이 됐음
         // 하지만 세션값은 변경되지 않은 상태이기때문에 세션값 갱신이 필요함 >> 나중에 알아보도록 하자
@@ -68,7 +69,7 @@ public class MemberController {
 
         MemberInfo member = (MemberInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         System.out.println(member.getId()+" "+password+" "+newPassword);
-        memberService.updatePassword(member.getId(), password, newPassword);
+        memberService.updateMemberPassword(member.getId(), password, newPassword);
 
         // 여기서는 트랜잭션이 종료되기 때문에 DB값은 변경이 됐음
         // 하지만 세션값은 변경되지 않은 상태이기때문에 세션값 갱신이 필요함 >> 나중에 알아보도록 하자

@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import testProject.membership.member.domain.MemberInfo;
 import testProject.membership.member.dto.MemberInfoDTO;
 import testProject.membership.member.repository.MemberRepository;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class MemberService implements UserDetailsService {
 
     @Autowired
@@ -37,7 +39,7 @@ public class MemberService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException((id)));
     }
 
-    public long save(MemberInfoDTO infoDto) { //long 이어야 하는 이유??
+    public Long save(MemberInfoDTO infoDto) { //Long 이어야 하는 이유??
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         infoDto.setPassword(encoder.encode(infoDto.getPassword()));
 
@@ -57,20 +59,29 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findAll();
     }
 
-    public int updateById(String id, String name, String password){
+    public void updateMemberById(String id, String name, String password){
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); // 비밀번호 매치 로직 (였던것)
+        MemberInfo memberInfo = loadUserByUsername(id);
 
-        if(encoder.matches(password, loadUserByUsername(id).getPassword())){
-            return memberRepository.updateById(id, name);
+        if(encoder.matches(password, memberInfo.getPassword())){
+            memberInfo.updateById(name);
         } else {throw new IllegalStateException("비밀번호가 일치하지 않습니다.");}//https://kimcoder.tistory.com/249
     }
 
-    public int updatePassword(String id, String password, String newPassword){
+    public void updateMemberPassword(String id, String password, String newPassword){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); // 비밀번호 매치 로직 (였던것)
+        MemberInfo memberInfo = loadUserByUsername(id);
+        if(encoder.matches(password, memberInfo.getPassword())){
+            newPassword = encoder.encode(newPassword);
+            memberInfo.updatePassword(newPassword);//새로운 비밀번호 암호화
+        } else {throw new IllegalStateException("비밀번호가 일치하지 않습니다.");}//https://kimcoder.tistory.com/249
+    }
+   /* public int updatePassword(String id, String password, String newPassword){
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); // 비밀번호 매치 로직 (였던것)
 
         if(encoder.matches(password, loadUserByUsername(id).getPassword())){
             newPassword = encoder.encode(newPassword); //새로운 비밀번호 암호화
             return memberRepository.updatePassword(id, newPassword);
         } else {throw new IllegalStateException("비밀번호가 일치하지 않습니다.");}//https://kimcoder.tistory.com/249
-    }
+    }*/
 }

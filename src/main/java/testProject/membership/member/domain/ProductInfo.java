@@ -1,4 +1,4 @@
-package testProject.membership.product.domain;
+package testProject.membership.member.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 /*
 Spring Data JPA
@@ -30,31 +31,26 @@ public class ProductInfo{
     @javax.persistence.Id //Prime Key
     @Column(name = "product_num", unique = true) //Entity Key?
     @GeneratedValue(strategy= GenerationType.IDENTITY)// DB에 위임을 통해 기본 키 생성
-    private Long product_num;
+    private Long id;
 
-    @Column(name = "product_category")
     private String product_category;
 
-    @Column(name = "product_name", unique = true)
+    @Column(unique = true)
     private String product_name;
 
-    @Column(name = "product_price")
     private int product_price;
 
-    @Column(name = "product_stock")
     private int product_stock;
 
-    @Column(name = "product_detail")
     private String product_detail;
 
-    @Column(name = "product_date")
     private String product_date;
 
 
 
     @Builder
-    public ProductInfo(Long product_num, String product_category, String product_name, int product_price, int product_stock, String product_detail, String product_date) {
-        this.product_num = product_num;
+    public ProductInfo(Long id, String product_category, String product_name, Integer product_price, Integer product_stock, String product_detail, String product_date) {
+        this.id = id;
         this.product_category = product_category;
         this.product_name = product_name;
         this.product_price = product_price;

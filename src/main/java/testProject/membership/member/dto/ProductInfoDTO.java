@@ -1,4 +1,4 @@
-package testProject.membership.product.dto;
+package testProject.membership.member.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import javax.persistence.Column;
 @Setter
 public class ProductInfoDTO {
 
-    private Long product_num;
+    private Long id;
     private String product_category;
     private String product_name;
     private int product_price;
