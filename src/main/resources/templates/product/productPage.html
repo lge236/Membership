@@ -3,11 +3,11 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title> 상품 상세</title>
+    <title th:text="${product.get().product_name}"> 상품 상세</title>
 </head>
 <body>
 
-<h2 style="text-align: center;">상품 상세</h2>
+<h2 style="text-align: center;" th:text="${product.get().product_name}">상품 상세</h2>
 
     상품번호 : <span th:text="${product.get().id}"></span><br>
     카테고리 : <span th:text="${product.get().product_category}"></span><br>

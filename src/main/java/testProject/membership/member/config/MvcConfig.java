@@ -19,6 +19,6 @@ public class MvcConfig implements WebMvcConfigurer {
         //상품
         registry.addViewController("/productList").setViewName("product/productList");
         registry.addViewController("/productUpload").setViewName("admin/productUpload");
-        //registry.addViewController("/admin/memberList").setViewName("admin/memberList");
+        registry.addViewController("/order").setViewName("order/order");
     }
 }

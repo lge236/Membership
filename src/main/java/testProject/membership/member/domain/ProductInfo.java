@@ -9,10 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
@@ -47,7 +44,6 @@ public class ProductInfo{
     private String product_date;
 
 
-
     @Builder
     public ProductInfo(Long id, String product_category, String product_name, Integer product_price, Integer product_stock, String product_detail, String product_date) {
         this.id = id;
@@ -59,3 +55,4 @@ public class ProductInfo{
         this.product_date = product_date;
     }
 }
+

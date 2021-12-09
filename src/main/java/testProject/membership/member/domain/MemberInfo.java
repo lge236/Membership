@@ -35,13 +35,10 @@ public class MemberInfo implements UserDetails {
     @Column(name = "id", unique = true)
     private String id;
 
-    @Column(name = "password")
     private String password;
 
-    @Column(name = "auth")
     private String auth;
 
-    @Column(name = "name")
     private String name;
 
     @Builder
