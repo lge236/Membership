@@ -1,14 +1,7 @@
 package testProject.membership.member.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -21,6 +14,7 @@ Spring Data JPA
 @Entity
 @javax.persistence.Table(name="order_info")
 @Getter
+@Setter
 public class OrderInfo {
 
     public enum OrderStatus{
@@ -57,5 +51,32 @@ public class OrderInfo {
         this.reg_time = reg_time;
         this.update_time=update_time;
         this.order_status = order_status;
+    }
+
+    public void addOrderDetailInfo(OrderDetailInfo orderDetailInfo){
+        orderDetails.add(orderDetailInfo);
+        orderDetailInfo.setOrderInfo(this);
+    }
+
+    public static OrderInfo createOrderInfo(MemberInfo memberInfo, List<OrderDetailInfo> orderDetails){
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setMemberInfo(memberInfo);
+
+        for(OrderDetailInfo orderDetailInfo : orderDetails){
+            orderInfo.addOrderDetailInfo(orderDetailInfo);
+        }
+
+        orderInfo.setOrder_status(OrderStatus.ORDER);
+        orderInfo.setReg_time(LocalDateTime.now());
+        return orderInfo;
+    }
+
+    public int getTotalPrice(){
+        int totalPrice = 0;
+
+        for(OrderDetailInfo orderDetailInfo : orderDetails){
+            totalPrice += orderDetailInfo.getTotalPrice();
+        }
+        return totalPrice;
     }
 }

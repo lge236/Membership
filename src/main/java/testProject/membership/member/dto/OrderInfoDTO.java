@@ -2,24 +2,19 @@ package testProject.membership.member.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import testProject.membership.member.domain.MemberInfo;
-import testProject.membership.member.domain.OrderDetailInfo;
-import testProject.membership.member.domain.OrderInfo;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 public class OrderInfoDTO {
 
-    private MemberInfo memberInfo;
+   @NotNull(message = "상품 정보가 없습니다.")
+   private Long product_num;
 
-    private List<OrderDetailInfo> orderDetails;
-
-    private LocalDateTime reg_time;
-
-    private LocalDateTime update_time;
-
-    private OrderInfo.OrderStatus order_status;
+   @Min(value = 1, message = "최소 주문 가능 수량은 1개 입니다.")
+   @Max(value = 999, message = "최대 주문 가능 수량은 999개 입니다.")
+   private int order_quantity;
 }

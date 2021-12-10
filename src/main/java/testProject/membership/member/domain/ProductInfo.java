@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import testProject.membership.member.exception.OutOfStockException;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -53,6 +54,15 @@ public class ProductInfo{
         this.product_stock = product_stock;
         this.product_detail = product_detail;
         this.product_date = product_date;
+    }
+
+    public void removeStock(int quantity){
+        int remainStock = this.product_stock - quantity;
+        if(remainStock < 0) {
+            throw new OutOfStockException("상품의 재고가 부족합니다. \n부족 수량: " + (remainStock + quantity) + ", 현재 재고: " + this.product_stock);
+        }
+        else
+            this.product_stock = remainStock;
     }
 }
 

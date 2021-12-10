@@ -12,7 +12,6 @@ import testProject.membership.member.dto.ProductInfoDTO;
 import testProject.membership.member.service.ProductService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Controller
@@ -39,7 +38,7 @@ public class ProductController {
 
     @GetMapping("/productDetail")
     public String getProductDetail(@RequestParam("SelectedItemNo") Long num, Model model){
-        Optional<ProductInfo> product = productService.findById(num);
+        ProductInfo product = productService.findById(num);
         model.addAttribute("product", product);
         return "product/productPage";
     }

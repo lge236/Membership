@@ -2,11 +2,17 @@ package testProject.membership.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;;
+import org.springframework.stereotype.Service;
+import testProject.membership.member.domain.MemberInfo;
+import testProject.membership.member.domain.OrderDetailInfo;
 import testProject.membership.member.domain.OrderInfo;
+import testProject.membership.member.domain.ProductInfo;
 import testProject.membership.member.dto.OrderInfoDTO;
+import testProject.membership.member.repository.MemberRepository;
 import testProject.membership.member.repository.OrderRepository;
+import testProject.membership.member.repository.ProductRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,21 +22,28 @@ public class OrderService {
 
     @Autowired
     private final OrderRepository orderRepository;
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
 
-    public Long save(OrderInfoDTO infoDto) { //Long 이어야 하는 이유??
+    public Long order(OrderInfoDTO infoDto, String member_id) { //Long 이어야 하는 이유??
+        Optional<ProductInfo> productInfo = productRepository.findById(infoDto.getProduct_num());
+        Optional<MemberInfo> memberInfo = memberRepository.findById(member_id);
 
-        return orderRepository.save(OrderInfo.builder()
-                .memberInfo(infoDto.getMemberInfo())
-                .orderDetails(infoDto.getOrderDetails())
-                .reg_time(infoDto.getReg_time())
-                .update_time(infoDto.getUpdate_time())
-                .order_status(infoDto.getOrder_status()).build()).getId();
+        List<OrderDetailInfo> orderDetails = new ArrayList<>();
+        OrderDetailInfo orderDetailInfo = OrderDetailInfo.createOrderDetailInfo(productInfo, infoDto.getOrder_quantity());
+        orderDetails.add(orderDetailInfo);
+
+        OrderInfo orderInfo = OrderInfo.createOrderInfo(memberInfo, orderDetails);
+        orderRepository.save(orderInfo);
+
+        return orderInfo.getId();
     }
-    //일반 상품 조회
+
+    //일반 주문 조회
     public Optional<OrderInfo> findById(Long num){ //Long or String??
         return orderRepository.findById(num);
     }
-    //전체 상품 조회
+    //전체 주문 조회
     public List<OrderInfo> findAll(){return orderRepository.findAll();}
 
     //상품 취소

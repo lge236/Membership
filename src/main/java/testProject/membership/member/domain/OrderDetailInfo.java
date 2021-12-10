@@ -1,13 +1,10 @@
 package testProject.membership.member.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Optional;
 
 /*
 Spring Data JPA
@@ -17,6 +14,7 @@ Spring Data JPA
 @Entity
 @javax.persistence.Table(name="order_detail")
 @Getter
+@Setter
 public class OrderDetailInfo {
 
     @Id // 직접할당
@@ -50,5 +48,19 @@ public class OrderDetailInfo {
         this.order_option = order_option;
         this.productInfo = productInfo; //product_num
         this.orderInfo = orderInfo; //order_num
+    }
+
+    public static OrderDetailInfo createOrderDetailInfo(ProductInfo productInfo, int order_quantity){
+        OrderDetailInfo orderDetailInfo = new OrderDetailInfo();
+        orderDetailInfo.setProductInfo(productInfo);
+        orderDetailInfo.setOrder_quantity(order_quantity);
+        orderDetailInfo.setOrder_price(productInfo.getProduct_price());
+
+        productInfo.removeStock(order_quantity);
+        return orderDetailInfo;
+    } //orderInfo는 orderInfo entity에서
+
+    public int getTotalPrice(){
+        return order_price * order_quantity;
     }
 }
