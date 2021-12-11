@@ -24,6 +24,7 @@ public class OrderController {
     @GetMapping("/orders")
     public String getOrders(Model model){
         List<OrderInfo> orders = orderService.findAll();
+
         model.addAttribute("orders", orders);
         return "/admin/orderList";
     }
