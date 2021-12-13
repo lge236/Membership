@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import testProject.membership.member.domain.MemberInfo;
 import testProject.membership.member.domain.OrderDetailInfo;
 import testProject.membership.member.domain.OrderInfo;
@@ -11,6 +12,7 @@ import testProject.membership.member.domain.ProductInfo;
 import testProject.membership.member.dto.OrderInfoDTO;
 import testProject.membership.member.exception.ProductNotFoundException;
 import testProject.membership.member.repository.MemberRepository;
+import testProject.membership.member.repository.OrderDetailRepository;
 import testProject.membership.member.repository.OrderRepository;
 import testProject.membership.member.repository.ProductRepository;
 
@@ -24,6 +26,7 @@ public class OrderService {
 
     @Autowired
     private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 
@@ -34,10 +37,11 @@ public class OrderService {
         List<OrderDetailInfo> orderDetails = new ArrayList<>();
         OrderDetailInfo orderDetailInfo = OrderDetailInfo.createOrderDetailInfo(productInfo, infoDto.getOrder_quantity());
         orderDetails.add(orderDetailInfo);
-
         OrderInfo orderInfo = OrderInfo.createOrderInfo(memberInfo, orderDetails);
         orderRepository.save(orderInfo);
 
+        orderDetailInfo.addOrderNum(orderInfo);
+        orderDetailRepository.save(orderDetailInfo);
         return orderInfo.getId();
     }
 
@@ -48,6 +52,12 @@ public class OrderService {
     //전체 주문 조회
     public List<OrderInfo> findAll(){return orderRepository.findAll();}
 
-    //상품 취소
+    //전체 주문 상세 조회
+    public List<OrderDetailInfo> findAllDetails(){return orderDetailRepository.findAll();}
+
+    //나의 주문 조회
+    public List<OrderDetailInfo> findMyDetails(MemberInfo memberInfo){
+        return orderDetailRepository.findByOrderInfoMemberInfo(memberInfo);
+    }
 
 }

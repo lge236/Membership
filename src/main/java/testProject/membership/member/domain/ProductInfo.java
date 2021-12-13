@@ -25,6 +25,7 @@ Spring Data JPA
 @Getter
 public class ProductInfo{
 
+
     @Id // 직접할당
     @javax.persistence.Id //Prime Key
     @Column(name = "product_num", unique = true) //Entity Key?
@@ -44,10 +45,9 @@ public class ProductInfo{
 
     private String product_date;
 
-
     @Builder
-    public ProductInfo(Long id, String product_category, String product_name, Integer product_price, Integer product_stock, String product_detail, String product_date) {
-        this.id = id;
+    public ProductInfo( String product_category, String product_name, Integer product_price, Integer product_stock, String product_detail, String product_date) {
+
         this.product_category = product_category;
         this.product_name = product_name;
         this.product_price = product_price;
@@ -58,11 +58,11 @@ public class ProductInfo{
 
     public void removeStock(int quantity){
         int remainStock = this.product_stock - quantity;
+
         if(remainStock < 0) {
             throw new OutOfStockException("상품의 재고가 부족합니다. \n부족 수량: " + (remainStock + quantity) + ", 현재 재고: " + this.product_stock);
         }
-        else
-            this.product_stock = remainStock;
+        this.product_stock = remainStock;
     }
 }
 

@@ -2,6 +2,7 @@ package testProject.membership.member.domain;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.Optional;
@@ -31,8 +32,6 @@ public class OrderDetailInfo {
 
     private int order_price;
 
-    private String order_option;
-
     @ManyToOne
     @JoinColumn(name="product_num")
     private ProductInfo productInfo;
@@ -41,11 +40,10 @@ public class OrderDetailInfo {
 
 
     @Builder
-    public OrderDetailInfo(Long id, int order_quantity, int order_price, String order_option, ProductInfo productInfo, OrderInfo orderInfo) {
-        this.id = id;
+    public OrderDetailInfo( int order_quantity, int order_price, ProductInfo productInfo, OrderInfo orderInfo) {
+
         this.order_quantity = order_quantity;
-        this.order_price = order_price; //한가지 상품*개수 의 총 가격
-        this.order_option = order_option;
+        this.order_price = order_price; //상품의 구입당시 가격
         this.productInfo = productInfo; //product_num
         this.orderInfo = orderInfo; //order_num
     }
@@ -58,7 +56,11 @@ public class OrderDetailInfo {
 
         productInfo.removeStock(order_quantity);
         return orderDetailInfo;
-    } //orderInfo는 orderInfo entity에서
+    }
+
+    public void addOrderNum(OrderInfo orderInfo){
+        this.orderInfo = orderInfo;
+    }
 
     public int getTotalPrice(){
         return order_price * order_quantity;

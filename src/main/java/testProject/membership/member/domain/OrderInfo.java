@@ -2,6 +2,8 @@ package testProject.membership.member.domain;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -30,8 +32,8 @@ public class OrderInfo {
     @JoinColumn(name="id")
     private MemberInfo memberInfo;
 
-    @OneToMany(mappedBy = "orderInfo")
-    private List<OrderDetailInfo> orderDetails = new ArrayList<>();
+    @OneToMany(mappedBy = "orderInfo", fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<OrderDetailInfo> orderDetails = new ArrayList<OrderDetailInfo>();
 
     private LocalDateTime reg_time;
 
@@ -44,8 +46,8 @@ public class OrderInfo {
 
 
     @Builder
-    public OrderInfo(Long id, MemberInfo memberInfo, List<OrderDetailInfo> orderDetails, LocalDateTime reg_time, LocalDateTime update_time, OrderStatus order_status) {
-        this.id = id;
+    public OrderInfo(MemberInfo memberInfo, List<OrderDetailInfo> orderDetails, LocalDateTime reg_time, LocalDateTime update_time, OrderStatus order_status) {
+
         this.memberInfo = memberInfo;
         this.orderDetails = orderDetails; //order_detail
         this.reg_time = reg_time;

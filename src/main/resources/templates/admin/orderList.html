@@ -14,28 +14,38 @@
     <td>주문번호</td>
     <td>주문일자</td>
     <td>회원번호</td>
-    <td>이름</td>
+    <td>회원아이디</td>
+    <td>상품번호</td>
     <td>상품명</td>
     <td>상품가격</td>
     <td>상품개수</td>
+    <td>개별총액</td>
     <td>주문총액</td>
-    <!--        <td>email</td>-->
-    <!--        <td>회원가입일자</td>-->
-    <!--        <td>최근 회원 정보 수정일</td>-->
   </tr>
-  <!--    <c:forEach items="${members}">-->
   <tbody>
-  <tr th:each="order : ${orders}">
-    <td th:text="${order.id}"></td>
-    <td th:text="${order.reg_time}">시간</td>
-    <td th:text="${order.memberInfo.code}">회원번호</td>
-    <td th:text="${order.memberInfo.name}">이름</td>
-    <td th:text="${order.getTotalPrice()}">총액</td>
+    <tr th:each="order : ${orders}">
+    <td th:text="${order.orderInfo.id}"></td>
+      <td th:text="${order.orderInfo.reg_time}"></td>
+      <td th:text="${order.orderInfo.memberInfo.id}"></td>
+      <td th:text="${order.orderInfo.memberInfo.name}"></td>
+      <td th:text="${order.productInfo.id}"></td>
+      <td th:text="${order.productInfo.product_name}"></td>
+      <td th:text="${order.order_price}"></td>
+      <td th:text="${order.order_quantity}"></td>
+      <td th:text="${order.getTotalPrice()}"></td>
+      <td th:text="${order.orderInfo.getTotalPrice()}">이게 안된다 총액이 fetchtype을 EAGER로 했는데도 LAZY로 불러오는 이유는?</td>
 
-    <!--            <td><c:out value="${mb.useremail}"></c:out></td>-->
-    <!--            <td><c:out value="${mb.regdate}"></c:out></td>-->
-    <!--            <td><c:out value="${mb.updatedate}"></c:out></td>-->
-  </tr>
+<!--    <td th:text="${order.id}" th:rowspan="${order.orderDetails.size}"></td>-->
+<!--    <td th:text="${order.reg_time}" th:rowspan="${order.orderDetails.size}">주문시각</td>-->
+<!--    <td th:text="${order.memberInfo.code}" th:rowspan="${order.orderDetails.size}">회원번호</td>-->
+<!--    <td th:text="${order.memberInfo.name}" th:rowspan="${order.orderDetails.size}">회원이름</td>-->
+<!--    <td th:text="${orderDetail.productInfo.id}">상품번호</td>-->
+<!--    <td th:text="${orderDetail.productInfo.product_name}">상품이름</td>-->
+<!--    <td th:text="${orderDetail.order_price}">상품가격</td>-->
+<!--    <td th:text="${orderDetail.order_quantity}">상품개수</td>-->
+<!--    <td th:text="${orderDetail.getTotalPrice()}">개별총액</td>-->
+<!--    <td th:text="${order.getTotalPrice()}" th:rowspawn="${order.orderDetails.size}">총액</td>-->
+    </tr>
   </tbody>
 </table>
 <input type="button" value="메인으로" class="btn" onclick="location.href='/admin'">

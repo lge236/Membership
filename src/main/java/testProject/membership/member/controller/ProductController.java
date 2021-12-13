@@ -28,7 +28,7 @@ public class ProductController {
     public String productList(Model model){
         List<ProductInfo> products = productService.findAll();
         model.addAttribute("products", products);
-        return "/product/productList";
+        return "product/productList";
     }
 
    @PostMapping("/productUploader")

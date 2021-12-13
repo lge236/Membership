@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<h2 style="text-align: center;" th:text="${product.get().product_name}">상품 상세</h2>
+    <h2 style="text-align: center;" th:text="${product.get().product_name}">상품 상세</h2>
 
     상품번호 : <span th:text="${product.get().id}"></span><br>
     카테고리 : <span th:text="${product.get().product_category}"></span><br>
@@ -16,7 +16,14 @@
     <br>
     <span th:text="${product.get().product_detail}"></span><br>
 
-<input type="button" value="메인으로" class="btn" onclick="location.href='/'">
+    <form th:action="@{/order}" method="POST">
+        <input type="hidden" name="product_num" th:value="${product.get().id}">
+    주문 수량 : <input type="text" name="order_quantity"> <br>
+    <button type="submit">구매하기</button>
+    </form>
+    <input type="button" value="목록으로" class="btn" onclick="location.href='/products'">
+    <br>
+    <input type="button" value="메인으로" class="btn" onclick="location.href='/'">
 
 </body>
 </html>
