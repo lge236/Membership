@@ -19,6 +19,7 @@
 
 <!--자격 증명에 실패했다는 메시지 -->
 <div th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']} != null">
+<!--  <span th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"></span>-->
   <span th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"></span>
 </div>
 

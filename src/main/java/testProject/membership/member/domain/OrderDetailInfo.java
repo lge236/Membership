@@ -48,13 +48,14 @@ public class OrderDetailInfo {
         this.orderInfo = orderInfo; //order_num
     }
 
+    //주문 상세 기록 생성
     public static OrderDetailInfo createOrderDetailInfo(ProductInfo productInfo, int order_quantity){
-        OrderDetailInfo orderDetailInfo = new OrderDetailInfo();
-        orderDetailInfo.setProductInfo(productInfo);
-        orderDetailInfo.setOrder_quantity(order_quantity);
-        orderDetailInfo.setOrder_price(productInfo.getProduct_price());
+        OrderDetailInfo orderDetailInfo = new OrderDetailInfo(); //새로운 주문 상세 기록
+        orderDetailInfo.setProductInfo(productInfo);//이 주문의 상품 정보
+        orderDetailInfo.setOrder_quantity(order_quantity); //이 주문의 주문 개수
+        orderDetailInfo.setOrder_price(productInfo.getProduct_price()); //이 주문의 당시 가격
 
-        productInfo.removeStock(order_quantity);
+        productInfo.removeStock(order_quantity); //재고 차감
         return orderDetailInfo;
     }
 
@@ -64,5 +65,9 @@ public class OrderDetailInfo {
 
     public int getTotalPrice(){
         return order_price * order_quantity;
+    }
+
+    public void cancel(){
+        this.getProductInfo().addStock(order_quantity);
     }
 }

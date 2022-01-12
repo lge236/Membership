@@ -35,7 +35,7 @@ public class MemberService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException((id)));
     }
 
-    public Long save(MemberInfoDTO infoDto) { //Long 이어야 하는 이유??
+    public Long save(MemberInfoDTO infoDto) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         infoDto.setPassword(encoder.encode(infoDto.getPassword()));
 

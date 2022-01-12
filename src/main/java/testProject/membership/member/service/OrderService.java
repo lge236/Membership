@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import testProject.membership.member.domain.MemberInfo;
 import testProject.membership.member.domain.OrderDetailInfo;
 import testProject.membership.member.domain.OrderInfo;
@@ -16,6 +15,7 @@ import testProject.membership.member.repository.OrderDetailRepository;
 import testProject.membership.member.repository.OrderRepository;
 import testProject.membership.member.repository.ProductRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +45,10 @@ public class OrderService {
         return orderInfo.getId();
     }
 
+    public void cancelOrder(Long order_num){
+        OrderInfo orderInfo = orderRepository.findById(order_num).orElseThrow(EntityNotFoundException::new);
+        orderInfo.cancelOrder();
+    }
     //일반 주문 조회
     /*public Optional<OrderInfo> findById(Long num){ //Long or String??
         return orderRepository.findById(num);
@@ -60,4 +64,5 @@ public class OrderService {
         return orderDetailRepository.findByOrderInfoMemberInfo(memberInfo);
     }
 
+    public Optional<OrderInfo> findById(Long order_num) {return orderRepository.findById(order_num);}
 }

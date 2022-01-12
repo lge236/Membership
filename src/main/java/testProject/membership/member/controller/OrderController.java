@@ -12,16 +12,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import testProject.membership.member.domain.MemberInfo;
 import testProject.membership.member.domain.OrderDetailInfo;
-import testProject.membership.member.domain.OrderInfo;
 import testProject.membership.member.dto.OrderInfoDTO;
 import testProject.membership.member.service.OrderService;
 
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Controller
@@ -34,24 +33,33 @@ public class OrderController {
     //ruturn "redirect: /값"; = 맵핑 액션 이름
 
     //(관리자)전체 주문 목록
-    @GetMapping("/orders")
-    public String getOrders(Model model){
-        List<OrderDetailInfo> orders = orderService.findAllDetails();
+//    @GetMapping("/orders")
+//    public String getOrders(Model model){
+//        List<OrderDetailInfo> orders = orderService.findAllDetails();
+//
+//        model.addAttribute("orders", orders);
+//        return "/admin/orderList";
+//    }
 
-        model.addAttribute("orders", orders);
+    @GetMapping("/orders") //전체 주문 목록 확인
+    public String getOrders(Model model){
+        List<OrderDetailInfo> orders = orderService.findAllDetails(); //모든 주문 불러오기
+
+        model.addAttribute("orders", orders); //주문 리스트를 뷰로 전송
         return "/admin/orderList";
     }
 
     @GetMapping("/myOrders")
     public String getMyOrders(Model model){
-        MemberInfo member = (MemberInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<OrderDetailInfo> orders = orderService.findMyDetails(member);
+        MemberInfo member = (MemberInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); //현재 로그인 정보
+        List<OrderDetailInfo> orders = orderService.findMyDetails(member); //멤버의 주문목록 불러오기
 
-        model.addAttribute("orders", orders);
+        model.addAttribute("orders", orders); //멤버의 주문리스트 뷰로 전송
         return "/order/myOrder";
     }
 
-    @PostMapping(value = "/order", produces = "application/json")
+//    @PostMapping(value = "/order", produces = "application/json") //주문하기, application/json 부분은 지워야 할 듯
+    @PostMapping(value = "/order") //주문하기, application/json 부분은 지워야 할 듯
     public ResponseEntity order(OrderInfoDTO infoDTO, BindingResult bindingResult, Principal principal){
         if(bindingResult.hasErrors()){
             StringBuilder sb = new StringBuilder();
@@ -62,11 +70,11 @@ public class OrderController {
             return new ResponseEntity<String>(sb.toString(), HttpStatus.BAD_REQUEST);
         }
 
-        String name = principal.getName();
-        Long orderId;
+        String name = principal.getName(); //현재 로그인 정보에서 이름 가져오기
+        Long orderId; //주문번호 생성
 
         try {
-            orderId = orderService.order(infoDTO, name);
+            orderId = orderService.order(infoDTO, name); //주문 시도 및 주문번호 가져오기
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -74,6 +82,12 @@ public class OrderController {
         return new ResponseEntity<Long>(orderId, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/cancelOrder")
+    public String cancelOrder(Long order_num){
+        orderService.cancelOrder(order_num);
+
+        return "redirect:/myOrders";
+    }
 //    @GetMapping("/orderDetail")
 //    public String getOrderDetail(Model model){
 //        MemberInfo member = (MemberInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

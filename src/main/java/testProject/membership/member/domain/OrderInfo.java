@@ -33,7 +33,7 @@ public class OrderInfo {
     private MemberInfo memberInfo;
 
     @OneToMany(mappedBy = "orderInfo", fetch = FetchType.EAGER, orphanRemoval = true)
-    private List<OrderDetailInfo> orderDetails = new ArrayList<OrderDetailInfo>();
+    private List<OrderDetailInfo> orderDetails = new ArrayList<>();
 
     private LocalDateTime reg_time;
 
@@ -80,5 +80,13 @@ public class OrderInfo {
             totalPrice += orderDetailInfo.getTotalPrice();
         }
         return totalPrice;
+    }
+
+    public void cancelOrder(){
+        this.order_status = OrderStatus.CANCEL;
+
+        for(OrderDetailInfo orderDetailInfo : orderDetails){
+            orderDetailInfo.cancel();
+        }
     }
 }

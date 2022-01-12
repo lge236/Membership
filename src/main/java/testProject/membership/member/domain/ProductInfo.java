@@ -1,9 +1,6 @@
 package testProject.membership.member.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -60,9 +57,14 @@ public class ProductInfo{
         int remainStock = this.product_stock - quantity;
 
         if(remainStock < 0) {
-            throw new OutOfStockException("상품의 재고가 부족합니다. \n부족 수량: " + (remainStock + quantity) + ", 현재 재고: " + this.product_stock);
+            throw new OutOfStockException("상품의 재고가 부족합니다. \n부족 수량: " + -(remainStock) + ", 현재 재고: " + this.product_stock);
+        }else {
+            this.product_stock = remainStock;
         }
-        this.product_stock = remainStock;
+    }
+
+    public void addStock(int quantity){
+        this.product_stock += quantity;
     }
 }
 

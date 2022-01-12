@@ -1,12 +1,11 @@
 package testProject.membership.member.dto;
 
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberInfoDTO {
+public class MemberInfoDTO { //회원가입 정보
 
     private String id;
     private String password;

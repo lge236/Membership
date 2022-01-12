@@ -12,9 +12,10 @@
 <table border="1">
   <tr>
     <td>주문번호</td>
+    <td>주문상태</td>
     <td>주문일자</td>
-    <td>회원번호</td>
     <td>회원아이디</td>
+    <td>회원이름</td>
     <td>상품번호</td>
     <td>상품명</td>
     <td>상품가격</td>
@@ -24,7 +25,9 @@
   </tr>
   <tbody>
     <tr th:each="order : ${orders}">
-    <td th:text="${order.orderInfo.id}"></td>
+<!--      <th:block th:each="orderDetail : ${orders.orderDetails}">-->
+      <td th:text="${order.orderInfo.id}"></td>
+      <td th:text="${order.orderInfo.order_status}"></td>
       <td th:text="${order.orderInfo.reg_time}"></td>
       <td th:text="${order.orderInfo.memberInfo.id}"></td>
       <td th:text="${order.orderInfo.memberInfo.name}"></td>
@@ -33,7 +36,7 @@
       <td th:text="${order.order_price}"></td>
       <td th:text="${order.order_quantity}"></td>
       <td th:text="${order.getTotalPrice()}"></td>
-      <td th:text="${order.orderInfo.getTotalPrice()}">이게 안된다 총액이 fetchtype을 EAGER로 했는데도 LAZY로 불러오는 이유는?</td>
+      <td th:text="${order.orderInfo.getTotalPrice()}">orders에 orderDetail말고 order 가져오기</td>
 
 <!--    <td th:text="${order.id}" th:rowspan="${order.orderDetails.size}"></td>-->
 <!--    <td th:text="${order.reg_time}" th:rowspan="${order.orderDetails.size}">주문시각</td>-->
