@@ -34,14 +34,14 @@
         <td th:text="${order.orderInfo.getTotalPrice()}"></td>
         <td>
             <form th:action="@{/cancelOrder}" method="POST">
-                <input type="hidden" name="cart_num" th:value="${order.orderInfo.id}">
+                <input type="hidden" name="order_num" th:value="${order.orderInfo.getId()}">
                 <button type="submit">주문취소</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
-<input type="button" value="메인으로" class="btn" onclick="location.href='/admin'">
+<input type="button" value="메인으로" class="btn" onclick="location.href='/'">
 
 </body>
 </html>

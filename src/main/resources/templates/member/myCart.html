@@ -17,6 +17,7 @@
         <td>상품개수</td>
         <td>총액</td>
         <td>장바구니삭제</td>
+        <td>구매하기</td>
     </tr>
     <tbody>
     <tr th:each="item : ${cart}">
@@ -31,10 +32,17 @@
                 <button type="submit">삭제</button>
             </form>
         </td>
+        <td>
+            <form th:action="@{/order}" method="POST">
+                <input type="hidden" name="product_num" th:value="${item.productInfo.id}">
+                <input type="hidden" name="order_quantity" th:value="${item.cart_quantity}">
+                <button type="submit">구매하기</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
-<input type="button" value="메인으로" class="btn" onclick="location.href='/admin'">
+<input type="button" value="메인으로" class="btn" onclick="location.href='/'">
 
 </body>
 </html>

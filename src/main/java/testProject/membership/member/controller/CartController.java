@@ -9,11 +9,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import testProject.membership.member.domain.CartInfo;
 import testProject.membership.member.domain.MemberInfo;
 import testProject.membership.member.dto.CartInfoDTO;
+import testProject.membership.member.dto.CartOrderDTO;
+import testProject.membership.member.dto.OrderInfoDTO;
 import testProject.membership.member.service.CartService;
 
 import java.security.Principal;
@@ -57,6 +60,17 @@ public class CartController {
         }
 
         return new ResponseEntity<Long>(cartId, HttpStatus.OK);
+    }
+    @PostMapping(value = "/cart/order")
+    public ResponseEntity cartOrder(CartOrderDTO cartOrderDTO, Principal principal){
+        List<CartOrderDTO> cartOrderDTOList = cartOrderDTO.getCartOrderDTOList();
+
+        if(cartOrderDTOList == null || cartOrderDTOList.size() == 0){
+            return new ResponseEntity<String>("선택된 상품이 없습니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        Long orderId = cartService.orderCartInfo(cartOrderDTOList, principal.getName());
+        return new ResponseEntity<Long>(orderId, HttpStatus.OK);
     }
 
     @PostMapping(value = "/deleteCart")

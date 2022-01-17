@@ -4,16 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import testProject.membership.member.domain.MemberInfo;
-import testProject.membership.member.domain.OrderDetailInfo;
-import testProject.membership.member.domain.OrderInfo;
-import testProject.membership.member.domain.ProductInfo;
+import testProject.membership.member.domain.*;
 import testProject.membership.member.dto.OrderInfoDTO;
 import testProject.membership.member.exception.ProductNotFoundException;
-import testProject.membership.member.repository.MemberRepository;
-import testProject.membership.member.repository.OrderDetailRepository;
-import testProject.membership.member.repository.OrderRepository;
-import testProject.membership.member.repository.ProductRepository;
+import testProject.membership.member.repository.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -29,8 +23,9 @@ public class OrderService {
     private final OrderDetailRepository orderDetailRepository;
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
+    private final CartRepository cartRepository;
 
-    public Long order(OrderInfoDTO infoDto, String member_id) { //Long 이어야 하는 이유??
+    public Long order(List<OrderInfoDTO> infoDtoList, String member_id) { //Long 이어야 하는 이유??
         ProductInfo productInfo = productRepository.findById(infoDto.getProduct_num()).orElseThrow(() -> new ProductNotFoundException("오류: 상품 정보가 없습니다."));
         MemberInfo memberInfo = memberRepository.findById(member_id).orElseThrow(() -> new UsernameNotFoundException(member_id));
 
@@ -42,6 +37,7 @@ public class OrderService {
 
         orderDetailInfo.addOrderNum(orderInfo);
         orderDetailRepository.save(orderDetailInfo);
+
         return orderInfo.getId();
     }
 
