@@ -44,7 +44,7 @@ public class CartInfo {
         return cartInfo;
     }
 
-
+    //총액
     public int getTotalPrice(){
         return productInfo.getProduct_price() * cart_quantity;
     }

@@ -53,6 +53,7 @@ public class ProductInfo{
         this.product_date = product_date;
     }
 
+    //주문시 재고 차감
     public void removeStock(int quantity){
         int remainStock = this.product_stock - quantity;
 
@@ -63,6 +64,7 @@ public class ProductInfo{
         }
     }
 
+    //주문 취소시 재고 복구
     public void addStock(int quantity){
         this.product_stock += quantity;
     }

@@ -16,6 +16,7 @@ Spring Data JPA
 @javax.persistence.Table(name="order_detail")
 @Getter
 @Setter
+//주문상세 (예: 주문번호 1에 개밥*1개, 개옷*2개, 고양이밥*1개 중 개밥*1 개옷*2 고양이밥*2 가 주문상세에 해당)
 public class OrderDetailInfo {
 
     @Id // 직접할당
@@ -59,14 +60,17 @@ public class OrderDetailInfo {
         return orderDetailInfo;
     }
 
+    //각 주문상세항목에 주문번호 주입하기
     public void addOrderNum(OrderInfo orderInfo){
         this.orderInfo = orderInfo;
     }
 
+    //총액
     public int getTotalPrice(){
         return order_price * order_quantity;
     }
 
+    //주문취소+재고 원상복구
     public void cancel(){
         this.getProductInfo().addStock(order_quantity);
     }

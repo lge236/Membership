@@ -30,7 +30,7 @@ public class CartController {
     private final CartService cartService;
 
     @GetMapping("/myCart")
-    public String getMyCart(Model model){
+    public String getMyCart(Model model) {
         MemberInfo member = (MemberInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); //현재 로그인 정보
         List<CartInfo> cart = cartService.findMyCart(member); //멤버의 주문목록 불러오기
 
@@ -40,11 +40,11 @@ public class CartController {
 
     //    @PostMapping(value = "/order", produces = "application/json") //주문하기, application/json 부분은 지워야 할 듯
     @PostMapping(value = "/addCart") //주문하기, application/json 부분은 지워야 할 듯
-    public ResponseEntity addCart(CartInfoDTO infoDTO, BindingResult bindingResult, Principal principal){
-        if(bindingResult.hasErrors()){
+    public ResponseEntity addCart(CartInfoDTO infoDTO, BindingResult bindingResult, Principal principal) {
+        if (bindingResult.hasErrors()) {
             StringBuilder sb = new StringBuilder();
             List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-            for (FieldError fieldError : fieldErrors){
+            for (FieldError fieldError : fieldErrors) {
                 sb.append(fieldError.getDefaultMessage());
             }
             return new ResponseEntity<String>(sb.toString(), HttpStatus.BAD_REQUEST);
@@ -59,30 +59,25 @@ public class CartController {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<Long>(cartId, HttpStatus.OK);
+        return new ResponseEntity<Long>(cartId, HttpStatus.OK); //장바구니번호 리턴
     }
-    @PostMapping(value = "/cart/order")
-    public ResponseEntity cartOrder(CartOrderDTO cartOrderDTO, Principal principal){
-        List<CartOrderDTO> cartOrderDTOList = cartOrderDTO.getCartOrderDTOList();
 
-        if(cartOrderDTOList == null || cartOrderDTOList.size() == 0){
+    @PostMapping(value = "/cart/order")
+    public ResponseEntity cartOrder(CartOrderDTO cartOrderDTO, Principal principal) {
+        List<CartOrderDTO> cartOrderDTOList = cartOrderDTO.getCartOrderDTOList(); //전달된 장바구니의 항목 리스트
+
+        if (cartOrderDTOList == null || cartOrderDTOList.size() == 0) { //리스트가 비었거나 0개면
             return new ResponseEntity<String>("선택된 상품이 없습니다.", HttpStatus.BAD_REQUEST);
         }
-
+        //주문로직에 장바구니 리스트와 멤버 정보 전달
         Long orderId = cartService.orderCartInfo(cartOrderDTOList, principal.getName());
+        //주문번호 리턴
         return new ResponseEntity<Long>(orderId, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/deleteCart")
-    public String deleteCart(Long cart_num){
+    @PostMapping(value = "/deleteCart") //장바구니 항목 상제
+    public String deleteCart(Long cart_num) {
         cartService.deleteById(cart_num);
         return "redirect:/myCart";
     }
-//    @GetMapping("/orderDetail")
-//    public String getOrderDetail(Model model){
-//        MemberInfo member = (MemberInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        Optional<OrderInfo> order = orderService.findById(num);
-//        model.addAttribute("order", order);
-//        return "order/orderListPage";
-//    }
 }

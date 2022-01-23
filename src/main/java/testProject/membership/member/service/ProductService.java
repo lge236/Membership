@@ -17,7 +17,7 @@ public class ProductService {
     @Autowired
     private final ProductRepository productRepository;
 
-    public Long save(ProductInfoDTO infoDto) { //Long 이어야 하는 이유??
+    public Long save(ProductInfoDTO infoDto) {
 
         return productRepository.save(ProductInfo.builder()
                 .product_category(infoDto.getProduct_category())

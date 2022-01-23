@@ -26,29 +26,33 @@ public class CartService {
     private final ProductRepository productRepository;
     private final OrderService orderService;
 
-    public Long addCart(CartInfoDTO infoDto, String member_id) { //Long 이어야 하는 이유??
+    //장바구니 추가
+    public Long addCart(CartInfoDTO infoDto, String member_id) {
         ProductInfo productInfo = productRepository.findById(infoDto.getProduct_num()).orElseThrow(() -> new ProductNotFoundException("오류: 상품 정보가 없습니다."));
         MemberInfo memberInfo = memberRepository.findById(member_id).orElseThrow(() -> new UsernameNotFoundException(member_id));
 
-        CartInfo cartInfo = CartInfo.createCartInfo(memberInfo, productInfo, infoDto.getCart_quantity());
+        CartInfo cartInfo = CartInfo.createCartInfo(memberInfo, productInfo, infoDto.getCart_quantity()); //장바구니 생성
         cartRepository.save(cartInfo);
 
         return cartInfo.getId();
     }
 
-    public Long orderCartInfo(List<CartOrderDTO> cartOrderDTOList, String id){
-        List<OrderInfoDTO> orderInfoDTOList = new ArrayList<>();
+    //카트의 상품 주문로직
+    public Long orderCartInfo(List<CartOrderDTO> cartOrderDTOList, String member_id){
+        List<OrderInfoDTO> orderInfoDTOList = new ArrayList<>(); //장바구니 리스트
 
-        for(CartOrderDTO cartOrderDTO : cartOrderDTOList){
-            CartInfo cartInfo = cartRepository.findById(cartOrderDTO.getCart_num()).orElseThrow();
+        for(CartOrderDTO cartOrderDTO : cartOrderDTOList){ //장바구니 항목들 정리
+            CartInfo cartInfo = cartRepository.findById(cartOrderDTO.getCart_num()).orElseThrow();//고객이 담은 장바구니 항목 불러오기
             OrderInfoDTO orderInfoDTO = new OrderInfoDTO();
-            orderInfoDTO.setProduct_num(cartInfo.getProductInfo().getId());
-            orderInfoDTO.setOrder_quantity(cartInfo.getCart_quantity());
+            orderInfoDTO.setProduct_num(cartInfo.getProductInfo().getId()); //상품번호
+            orderInfoDTO.setOrder_quantity(cartInfo.getCart_quantity()); //수량
             orderInfoDTOList.add(orderInfoDTO);
         }
 
-        Long orderId = orderService.order(orderInfoDTOList, id);
+        //주문 로직
+        Long orderId = orderService.orders(orderInfoDTOList, member_id);
 
+        //주문완료 후 장바구니 삭제
         for (CartOrderDTO cartOrderDTO : cartOrderDTOList){
             CartInfo cartInfo = cartRepository.findById(cartOrderDTO.getCart_num()).orElseThrow();
             cartRepository.delete(cartInfo);
@@ -60,6 +64,7 @@ public class CartService {
         return cartRepository.findByMemberInfo(memberInfo);
     }
 
+    //장바구니 삭제
     public void deleteById(Long id) {
         cartRepository.deleteById(id);
     }

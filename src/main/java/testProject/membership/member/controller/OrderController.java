@@ -58,8 +58,7 @@ public class OrderController {
         return "/order/myOrder";
     }
 
-//    @PostMapping(value = "/order", produces = "application/json") //주문하기, application/json 부분은 지워야 할 듯
-    @PostMapping(value = "/order") //주문하기, application/json 부분은 지워야 할 듯
+    @PostMapping(value = "/order") //주문하기
     public ResponseEntity order(OrderInfoDTO infoDTO, BindingResult bindingResult, Principal principal){
         if(bindingResult.hasErrors()){
             StringBuilder sb = new StringBuilder();
@@ -82,17 +81,10 @@ public class OrderController {
         return new ResponseEntity<Long>(orderId, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/cancelOrder")
+    @PostMapping(value = "/cancelOrder") //주문 취소
     public String cancelOrder(Long order_num){
         orderService.cancelOrder(order_num);
 
         return "redirect:/myOrders";
     }
-//    @GetMapping("/orderDetail")
-//    public String getOrderDetail(Model model){
-//        MemberInfo member = (MemberInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        Optional<OrderInfo> order = orderService.findById(num);
-//        model.addAttribute("order", order);
-//        return "order/orderListPage";
-//    }
 }

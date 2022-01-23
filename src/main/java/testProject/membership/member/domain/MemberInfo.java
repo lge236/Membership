@@ -100,7 +100,7 @@ public class MemberInfo implements UserDetails {
         return true; // true -> 사용 가능
     }
 
-
+    //회원정보수정
     public void updateById(String name){
         this.name = name;
     }
