@@ -24,23 +24,23 @@ public class ProductController {
     //return "/경로"; = html 문서 경로
     //ruturn "redirect: /값"; = 맵핑 액션 이름
 
-    @GetMapping("/products")
+    @GetMapping("/products") //상품 목록
     public String productList(Model model){
-        List<ProductInfo> products = productService.findAll();
-        model.addAttribute("products", products);
+        List<ProductInfo> products = productService.findAll(); //전체 상품 목록 불러오기
+        model.addAttribute("products", products); //뷰로 전송
         return "product/productList";
     }
 
-   @PostMapping("/productUploader")
-    public String productUpload(ProductInfoDTO infoDto) { // 회원 추가
+   @PostMapping("/productUploader") //상품 추가
+    public String productUpload(ProductInfoDTO infoDto) {
         productService.save(infoDto);
         return "redirect:/products";
     }
 
-    @GetMapping("/productDetail")
-    public String getProductDetail(@RequestParam("SelectedItemNo") Long num, Model model){
-        Optional<ProductInfo> product = productService.findById(num);
-        model.addAttribute("product", product);
+    @GetMapping("/productDetail") //상품 상세 페이지
+    public String getProductDetail(@RequestParam("SelectedItemNo") Long num, Model model){ //주소창에서의 ?파라미터 num에 따른 상품 id 엑세스
+        Optional<ProductInfo> product = productService.findById(num); //상품 id를 통해 상품 상세 정보 가져오기
+        model.addAttribute("product", product); //상품 정보 뷰로 전달
         return "product/productPage";
     }
 }

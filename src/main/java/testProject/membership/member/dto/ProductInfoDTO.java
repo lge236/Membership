@@ -7,7 +7,7 @@ import javax.persistence.Column;
 
 @Getter
 @Setter
-public class ProductInfoDTO {
+public class ProductInfoDTO { //상품 등록 정보
 
     private Long id;
     private String product_category;
